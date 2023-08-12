@@ -11,19 +11,35 @@ typedef struct
 	int top;
 } Stack;
 
-/* Initialize the stack */
+
 void initStack(Stack *stack)
 {
 	stack->top = -1;
 }
-
-/* Check if the stack is empty */
+/**
+ * Checks if the stack is empty.
+ *
+ * This function checks whether the given stack is empty by examining
+ * its top index. If the top index is -1, the stack is considered empty.
+ *
+ * @param stack Pointer to the stack to be checked.
+ * @return 1 if the stack is empty, 0 otherwise.
+ */
 int isEmpty(stack *stack)
 {
 	return (stack->top == -1);
 }
 
-/* Push an element onto the stack */
+/**
+ * Pushes an element onto the stack.
+ *
+ * This function adds a new element with the given value to the top of the stack.
+ * If the stack is not already full, the top index is incremented, and the value
+ * is added to the top of the stack.
+ *
+ * @param stack Pointer to the stack to which the value should be pushed.
+ * @param value The value to be pushed onto the stack.
+ */
 void push(stack *stack, int value)
 {
 	if (stack->top >= STACK_SIZE -1)

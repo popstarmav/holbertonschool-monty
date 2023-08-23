@@ -45,15 +45,3 @@ void process_opcode(stack_t **stack, char *opcode, char *arg, unsigned int line_
         exit(EXIT_FAILURE);
     }
 }
-
-/* Helper function to check if a string is numeric */
-int is_numeric(const char *str) {
-    if (!str)
-        return 0;
-
-    for (int i = 0; str[i]; i++) {
-        if (!isdigit(str[i]) && str[i] != '-')
-            return 0;
-    }
-    return 1;
-}

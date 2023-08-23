@@ -1,79 +1,86 @@
 #ifndef MONTY_H
 #define MONTY_H
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
+
+/* Data Structures */
+
+struct stack_s; /* Forward declaration */
+
+typedef void (*instruct_func)(struct stack_s **stack, unsigned int line_number);
+
 /**
- * struct stack_s - doubly linked list representation of a stack (or queue)
- * @n: integer
- * @prev: points to the previous element of the stack (or queue)
- * @next: points to the next element of the stack (or queue)
- *
- * Description: doubly linked list node structure
- * for stack, queues, LIFO, FIFO Holberton project
+ * struct stack_s - Doubly linked list representation of a stack (or queue)
+ * @n: Integer value stored in the node
+ * @prev: Pointer to the previous node in the stack
+ * @next: Pointer to the next node in the stack
  */
 typedef struct stack_s
 {
-	int n;
-	struct stack_s *prev;
-	struct stack_s *next;
+    int n;
+    struct stack_s *prev;
+    struct stack_s *next;
 } stack_t;
+
 /**
- * struct bus_s - variables -args, file, line content
- * @arg: value
- * @file: pointer to monty file
- * @content: line content
- * @lifi: flag change stack <-> queue
- * Description: carries values through the program
- */
-typedef struct bus_s
-{
-	char *arg;
-	FILE *file;
-	char *content;
-	int lifi;
-}  bus_t;
-extern bus_t bus;
-/**
- * struct instruction_s - opcode and its function
- * @opcode: the opcode
- * @f: function to handle the opcode
- *
- * Description: opcode and its function
- * for stack, queues, LIFO, FIFO Holberton project
+ * struct instruction_s - Struct for opcode and function pointer
+ * @opcode: The opcode (e.g., "push")
+ * @f: Pointer to the function that handles the opcode
  */
 typedef struct instruction_s
 {
-	char *opcode;
-	void (*f)(stack_t **stack, unsigned int line_number);
+    char *opcode;
+    instruct_func f;
 } instruction_t;
-char *_realloc(char *ptr, unsigned int old_size, unsigned int new_size);
-ssize_t getstdin(char **lineptr, int file);
-char  *clean_line(char *content);
-void f_push(stack_t **head, unsigned int number);
-void f_pall(stack_t **head, unsigned int number);
-void f_pint(stack_t **head, unsigned int number);
-int execute(char *content, stack_t **head, unsigned int counter, FILE *file);
-void free_stack(stack_t *head);
-void f_pop(stack_t **head, unsigned int counter);
-void f_swap(stack_t **head, unsigned int counter);
-void f_add(stack_t **head, unsigned int counter);
-void f_nop(stack_t **head, unsigned int counter);
-void f_sub(stack_t **head, unsigned int counter);
-void f_div(stack_t **head, unsigned int counter);
-void f_mul(stack_t **head, unsigned int counter);
-void f_mod(stack_t **head, unsigned int counter);
-void f_pchar(stack_t **head, unsigned int counter);
-void f_pstr(stack_t **head, unsigned int counter);
-void f_rotl(stack_t **head, unsigned int counter);
-void f_rotr(stack_t **head, __attribute__((unused)) unsigned int counter);
-void addnode(stack_t **head, int n);
-void addqueue(stack_t **head, int n);
-void f_queue(stack_t **head, unsigned int counter);
-void f_stack(stack_t **head, unsigned int counter);
-#endif
 
+/* Global Variables */
+
+extern struct global_vars
+{
+    FILE *file;
+    char *buffer;
+    int push_arg;
+} var_global;
+
+/* Function Prototypes */
+instruct_func get_op_func(char *str);
+
+/* monty_main.c */
+void read_file(char *filename, struct stack_s **stack);
+
+/* monty_execute.c */
+void execute_opcode(char *opcode, struct stack_s **stack, unsigned int line_number);
+
+/* monty_opcodes.c */
+void _push(struct stack_s **stack, unsigned int line_number);
+void _pall(struct stack_s **stack, unsigned int line_number);
+void _pint(struct stack_s **stack, unsigned int line_number);
+void _pop(struct stack_s **stack, unsigned int line_number);
+void _swap(struct stack_s **stack, unsigned int line_number);
+void _add(struct stack_s **stack, unsigned int line_number);
+void _nop(struct stack_s **stack, unsigned int line_number);
+void _sub(struct stack_s **stack, unsigned int line_number);
+void _mul(struct stack_s **stack, unsigned int line_number);
+void _div(struct stack_s **stack, unsigned int line_number);
+void _mod(struct stack_s **stack, unsigned int line_number);
+void _pchar(struct stack_s **stack, unsigned int line_number);
+void _pstr(struct stack_s **stack, unsigned int line_number);
+void _rotl(struct stack_s **stack, unsigned int line_number);
+void _rotr(struct stack_s **stack, unsigned int line_number);
+int _isalpha(int c);
+
+/* monty_utility.c */
+void handle_error(const char *msg);
+void handle_error_at_line(unsigned int line_number, const char *msg);
+int isnumber(char *str);
+
+/* Freeing and Cleanup */
+void free_dlistint(struct stack_s *head);
+
+/* Additional Functions */
+char *parse_line(char *line, struct stack_s **stack, unsigned int line_number);
+
+#endif /* MONTY_H */
